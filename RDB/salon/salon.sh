@@ -9,7 +9,6 @@ echo -e "\nWelcome to the salon, which service would you like to use?"
 else
 echo -e "\n$1 Would you like to book a service?"
 fi
-options=()
 while IFS=',' read number name
 do
 echo "$number) $name"
