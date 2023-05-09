@@ -16,17 +16,17 @@ SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
-DROP DATABASE number_guess;
+DROP DATABASE periodic_table;
 --
--- Name: number_guess; Type: DATABASE; Schema: -; Owner: postgres
+-- Name: periodic_table; Type: DATABASE; Schema: -; Owner: postgres
 --
 
-CREATE DATABASE number_guess WITH TEMPLATE = template0 ENCODING = 'UTF8' LC_COLLATE = 'C.UTF-8' LC_CTYPE = 'C.UTF-8';
+CREATE DATABASE periodic_table WITH TEMPLATE = template0 ENCODING = 'UTF8' LC_COLLATE = 'C.UTF-8' LC_CTYPE = 'C.UTF-8';
 
 
-ALTER DATABASE number_guess OWNER TO postgres;
+ALTER DATABASE periodic_table OWNER TO postgres;
 
-\connect number_guess
+\connect periodic_table
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -44,24 +44,50 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
--- Name: games; Type: TABLE; Schema: public; Owner: freecodecamp
+-- Name: elements; Type: TABLE; Schema: public; Owner: freecodecamp
 --
 
-CREATE TABLE public.games (
-    game_id integer NOT NULL,
-    user_id integer NOT NULL,
-    guesses integer NOT NULL,
-    number integer
+CREATE TABLE public.elements (
+    atomic_number integer NOT NULL,
+    symbol character varying(2) NOT NULL,
+    name character varying(40) NOT NULL
 );
 
 
-ALTER TABLE public.games OWNER TO freecodecamp;
+ALTER TABLE public.elements OWNER TO freecodecamp;
 
 --
--- Name: games_game_id_seq; Type: SEQUENCE; Schema: public; Owner: freecodecamp
+-- Name: properties; Type: TABLE; Schema: public; Owner: freecodecamp
 --
 
-CREATE SEQUENCE public.games_game_id_seq
+CREATE TABLE public.properties (
+    atomic_number integer NOT NULL,
+    type_id integer NOT NULL,
+    atomic_mass real NOT NULL,
+    melting_point_celsius numeric NOT NULL,
+    boiling_point_celsius numeric NOT NULL
+);
+
+
+ALTER TABLE public.properties OWNER TO freecodecamp;
+
+--
+-- Name: types; Type: TABLE; Schema: public; Owner: freecodecamp
+--
+
+CREATE TABLE public.types (
+    type character varying(12) NOT NULL,
+    type_id integer NOT NULL
+);
+
+
+ALTER TABLE public.types OWNER TO freecodecamp;
+
+--
+-- Name: types_type_id_seq; Type: SEQUENCE; Schema: public; Owner: freecodecamp
+--
+
+CREATE SEQUENCE public.types_type_id_seq
     AS integer
     START WITH 1
     INCREMENT BY 1
@@ -70,121 +96,142 @@ CREATE SEQUENCE public.games_game_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.games_game_id_seq OWNER TO freecodecamp;
+ALTER TABLE public.types_type_id_seq OWNER TO freecodecamp;
 
 --
--- Name: games_game_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: freecodecamp
+-- Name: types_type_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: freecodecamp
 --
 
-ALTER SEQUENCE public.games_game_id_seq OWNED BY public.games.game_id;
-
-
---
--- Name: users; Type: TABLE; Schema: public; Owner: freecodecamp
---
-
-CREATE TABLE public.users (
-    username character varying(25) NOT NULL,
-    user_id integer NOT NULL
-);
-
-
-ALTER TABLE public.users OWNER TO freecodecamp;
-
---
--- Name: users_user_id_seq; Type: SEQUENCE; Schema: public; Owner: freecodecamp
---
-
-CREATE SEQUENCE public.users_user_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.users_user_id_seq OWNER TO freecodecamp;
-
---
--- Name: users_user_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: freecodecamp
---
-
-ALTER SEQUENCE public.users_user_id_seq OWNED BY public.users.user_id;
+ALTER SEQUENCE public.types_type_id_seq OWNED BY public.types.type_id;
 
 
 --
--- Name: games game_id; Type: DEFAULT; Schema: public; Owner: freecodecamp
+-- Name: types type_id; Type: DEFAULT; Schema: public; Owner: freecodecamp
 --
 
-ALTER TABLE ONLY public.games ALTER COLUMN game_id SET DEFAULT nextval('public.games_game_id_seq'::regclass);
-
-
---
--- Name: users user_id; Type: DEFAULT; Schema: public; Owner: freecodecamp
---
-
-ALTER TABLE ONLY public.users ALTER COLUMN user_id SET DEFAULT nextval('public.users_user_id_seq'::regclass);
+ALTER TABLE ONLY public.types ALTER COLUMN type_id SET DEFAULT nextval('public.types_type_id_seq'::regclass);
 
 
 --
--- Data for Name: games; Type: TABLE DATA; Schema: public; Owner: freecodecamp
+-- Data for Name: elements; Type: TABLE DATA; Schema: public; Owner: freecodecamp
 --
 
-INSERT INTO public.games VALUES (216, 190, 301, 300);
-INSERT INTO public.games VALUES (217, 191, 334, 333);
-INSERT INTO public.games VALUES (218, 190, 91, 88);
-INSERT INTO public.games VALUES (219, 190, 770, 768);
-INSERT INTO public.games VALUES (220, 190, 46, 45);
-
-
---
--- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: freecodecamp
---
-
-INSERT INTO public.users VALUES ('user_1683661047787', 190);
-INSERT INTO public.users VALUES ('user_1683661047786', 191);
+INSERT INTO public.elements VALUES (1, 'H', 'Hydrogen');
+INSERT INTO public.elements VALUES (2, 'He', 'Helium');
+INSERT INTO public.elements VALUES (3, 'Li', 'Lithium');
+INSERT INTO public.elements VALUES (4, 'Be', 'Beryllium');
+INSERT INTO public.elements VALUES (5, 'B', 'Boron');
+INSERT INTO public.elements VALUES (6, 'C', 'Carbon');
+INSERT INTO public.elements VALUES (7, 'N', 'Nitrogen');
+INSERT INTO public.elements VALUES (8, 'O', 'Oxygen');
+INSERT INTO public.elements VALUES (9, 'F', 'Fluorine');
+INSERT INTO public.elements VALUES (10, 'Ne', 'Neon');
 
 
 --
--- Name: games_game_id_seq; Type: SEQUENCE SET; Schema: public; Owner: freecodecamp
+-- Data for Name: properties; Type: TABLE DATA; Schema: public; Owner: freecodecamp
 --
 
-SELECT pg_catalog.setval('public.games_game_id_seq', 220, true);
-
-
---
--- Name: users_user_id_seq; Type: SEQUENCE SET; Schema: public; Owner: freecodecamp
---
-
-SELECT pg_catalog.setval('public.users_user_id_seq', 191, true);
-
-
---
--- Name: games games_pkey; Type: CONSTRAINT; Schema: public; Owner: freecodecamp
---
-
-ALTER TABLE ONLY public.games
-    ADD CONSTRAINT games_pkey PRIMARY KEY (user_id, guesses, game_id);
+INSERT INTO public.properties VALUES (1, 1, 1.008, -259.1, -252.9);
+INSERT INTO public.properties VALUES (2, 1, 4.0026, -272.2, -269);
+INSERT INTO public.properties VALUES (6, 1, 12.011, 3550, 4027);
+INSERT INTO public.properties VALUES (7, 1, 14.007, -210.1, -195.8);
+INSERT INTO public.properties VALUES (8, 1, 15.999, -218, -183);
+INSERT INTO public.properties VALUES (3, 2, 6.94, 180.54, 1342);
+INSERT INTO public.properties VALUES (4, 2, 9.0122, 1287, 2470);
+INSERT INTO public.properties VALUES (5, 3, 10.81, 2075, 4000);
+INSERT INTO public.properties VALUES (9, 1, 18.998, -220, -188.1);
+INSERT INTO public.properties VALUES (10, 1, 20.18, -248.6, -246.1);
 
 
 --
--- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: freecodecamp
+-- Data for Name: types; Type: TABLE DATA; Schema: public; Owner: freecodecamp
 --
 
-ALTER TABLE ONLY public.users
-    ADD CONSTRAINT users_pkey PRIMARY KEY (user_id);
+INSERT INTO public.types VALUES ('nonmetal', 1);
+INSERT INTO public.types VALUES ('metal', 2);
+INSERT INTO public.types VALUES ('metalloid', 3);
 
 
 --
--- Name: games games_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: freecodecamp
+-- Name: types_type_id_seq; Type: SEQUENCE SET; Schema: public; Owner: freecodecamp
 --
 
-ALTER TABLE ONLY public.games
-    ADD CONSTRAINT games_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(user_id);
+SELECT pg_catalog.setval('public.types_type_id_seq', 3, true);
+
+
+--
+-- Name: elements elements_atomic_number_key; Type: CONSTRAINT; Schema: public; Owner: freecodecamp
+--
+
+ALTER TABLE ONLY public.elements
+    ADD CONSTRAINT elements_atomic_number_key UNIQUE (atomic_number);
+
+
+--
+-- Name: elements elements_name_key; Type: CONSTRAINT; Schema: public; Owner: freecodecamp
+--
+
+ALTER TABLE ONLY public.elements
+    ADD CONSTRAINT elements_name_key UNIQUE (name);
+
+
+--
+-- Name: elements elements_pkey; Type: CONSTRAINT; Schema: public; Owner: freecodecamp
+--
+
+ALTER TABLE ONLY public.elements
+    ADD CONSTRAINT elements_pkey PRIMARY KEY (atomic_number);
+
+
+--
+-- Name: elements elements_symbol_key; Type: CONSTRAINT; Schema: public; Owner: freecodecamp
+--
+
+ALTER TABLE ONLY public.elements
+    ADD CONSTRAINT elements_symbol_key UNIQUE (symbol);
+
+
+--
+-- Name: properties properties_atomic_number_key; Type: CONSTRAINT; Schema: public; Owner: freecodecamp
+--
+
+ALTER TABLE ONLY public.properties
+    ADD CONSTRAINT properties_atomic_number_key UNIQUE (atomic_number);
+
+
+--
+-- Name: properties properties_pkey; Type: CONSTRAINT; Schema: public; Owner: freecodecamp
+--
+
+ALTER TABLE ONLY public.properties
+    ADD CONSTRAINT properties_pkey PRIMARY KEY (atomic_number);
+
+
+--
+-- Name: types types_pkey; Type: CONSTRAINT; Schema: public; Owner: freecodecamp
+--
+
+ALTER TABLE ONLY public.types
+    ADD CONSTRAINT types_pkey PRIMARY KEY (type_id);
+
+
+--
+-- Name: properties properties_atomic_number_fkey; Type: FK CONSTRAINT; Schema: public; Owner: freecodecamp
+--
+
+ALTER TABLE ONLY public.properties
+    ADD CONSTRAINT properties_atomic_number_fkey FOREIGN KEY (atomic_number) REFERENCES public.elements(atomic_number);
+
+
+--
+-- Name: properties properties_type_fkey; Type: FK CONSTRAINT; Schema: public; Owner: freecodecamp
+--
+
+ALTER TABLE ONLY public.properties
+    ADD CONSTRAINT properties_type_fkey FOREIGN KEY (type_id) REFERENCES public.types(type_id);
 
 
 --
 -- PostgreSQL database dump complete
 --
-
